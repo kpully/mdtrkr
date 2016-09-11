@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, IntegerField, SelectField, Decimal
 from wtforms.validators import Required, Optional
 from wtforms.ext.dateutil.fields import DateField
 from wtforms.fields.html5 import DateField
-from ..models import Mood
+from ..models import Mood, Script
 
 class DrugForm(Form):
     drug=SelectField('Drug', choices=[('Abilify', 'Abilify'), ('Ativan', 'Ativan'), ('Carbolith', 'Carbolith'), ('Celexa', 'Celexa'), ('Clozaril', 'Clozaril'), 
