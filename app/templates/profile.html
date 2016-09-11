@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}MedTracker{% endblock %}
+
+{% block page_content %}
+<style>
+  .axis path,
+  .axis line{
+    fill: none;
+    stroke: grey;
+  }
+
+  .tick text{
+    font-size: 8px;
+  }
+
+  .tick line{
+    fill: none;
+    opacity: 0.1;
+  }
+
+   .circle{
+    opacity: 0.8;
+    fill: purple;
+  }
+  .domain {
+  fill: none;
+  stroke:black;
+}
+
+.line {
+  fill: none;
+  stroke:black;
+  width: 10;
+}
+
+.axis {
+    fill: none;
+    stroke: grey;
+    stroke-width: 0.3;
+    shape-rendering: crispEdges;
+}
+b {
+   font-size=8;
+ }
+</style>
+<div class="page-header">
+	<h1>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h1>
+</div>
+
+{% if current_user.is_authenticated %}
+<script>
+  var objects = new Array();
+  $(document).ready(function() {
+    $("#delete").click(function() {
+      console.log('need to delete this!');
+    })
+  });
+</script>
+<div class="row">
+  <div class="add"> <a href="{{ url_for('.script') }}" class="btn btn-lg btn-primary">Add a prescription</a></div>
+  <div class="add"> <a href="{{ url_for('.mood') }}" class="btn btn-lg btn-primary">Add a mood</a></div>
+</div>
+<br>
+ 
+  <div class="row">
+    <div class="col-md-4" style="font-size:12px">
+          <br><br><br>
+      <h3 style="font-size:20px"> Your current prescriptions:</h3>
+      <ul class="list-group">
+        {% for script in scripts %}
+        {% if not script.end_date %}
+        <class="list-group-item"><b>{{ script.drug}}:</b> {{ script.dose}} mg, since {{ script.start }} <a href="{{ url_for('.del_record', id=script.id) }}"></a></class="list-group-item">
+        <script>
+          var d = {};
+          d.medicine = ('{{script.drug}}')
+          d.dose = ({{script.dose}})
+          objects.push(d)
+        </script>
+        {% endif %}
+        {% endfor %}
+        <script>
+          console.log(objects)
+        </script>
+      </ul>
+      <br><br><br><br><br><br>
+    </div>
+    <div class="col-md-4">
+    <br>
+    <div id="donut"></div>
+    </div>
+        <div class="col-md-4">
+    <div id="chart"></div>
+    </div>
+    <script>
+      var width = 260,
+      height = 260,
+      radius = Math.min(width, height) / 3;
+
+      var color = d3.scale.ordinal()
+      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+      var arc = d3.svg.arc()
+      .outerRadius(radius - 10)
+      .innerRadius(radius - 30);
+
+      var pie = d3.layout.pie()
+      .sort(null)
+      .value(function(d) { return d.dose; });
+
+      var svg = d3.select("#donut").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 3 + ")");
+
+//data = [{"medicine": 'Wellbutrin', "dose": 20}, {"medicine": 'Prozac', "dose": 100}]
+
+data = objects.sort(function(a, b) {
+  return a.dose-b.dose;
+})
+
+var g = svg.selectAll(".arc")
+.data(pie(data))
+.enter().append("g")
+.attr("class", "arc");
+
+g.append("path")
+.attr("d", arc)
+.style("fill", function(d) { return color(d.data.medicine); });
+
+g.append("text")
+.attr("transform", function(d) { console.log(arc.centroid(d)); return "translate("+ arc.centroid(d)+")"; })
+.attr("dy", ".35em")
+.text(function(d) { return d.data.medicine; });
+</script>
+
+{% else %}
+{{ super() }}
+{% endif %}
+</div>
+
+{% if current_user.is_authenticated %}
+<script>  var objects = new Array();</script>
+{% for mood in moods %}
+<script>
+var d = {};
+d.mood = ({{mood.mood}})
+d.date = ('{{mood.date}}')
+
+objects.push(d)
+</script>
+{% endfor %}
+<div class="container">
+<br>
+<script>
+
+var parseDate = d3.time.format("%Y-%m-%d").parse;
+
+var data = [{"date": 1, "mood": 1}, {"date": 2, "mood": 2}, {"date": 3, "mood": 4}, {"date": 4, "mood": 2}]
+for (i=0; i<objects.length; i++) {
+  //console.log(objects[i].date)
+  objects[i].date = parseDate(objects[i].date);
+}
+objects = objects.sort(function(a, b) {
+  return a.date-b.date;
+})
+//console.log(objects)
+// Define the resolution
+var margin = {top: 10, right: 20, bottom:20, left: 30},
+width = 400 - margin.left - margin.right;
+height = 250 - margin.top-margin.bottom;    
+
+// Create the SVG 'canvas'
+var svg = d3.select("body")
+    .append("svg")
+
+var x = d3.time.scale()
+  .range([0, width]);
+
+var y = d3.scale.linear()
+  .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+  .scale(x)
+  .orient("bottom").ticks(5);
+
+ var yAxis = d3.svg.axis()
+  .scale(y)
+  .orient("left").ticks(5);
+
+ var circle = svg.selectAll("circle")
+  .data(objects)
+  .enter()
+  .append("circle")
+
+var line = d3.svg.line()
+  .x(function(d) { return x(d.date); })
+  .y(function(d) { return y(d.mood); })
+
+x.domain(d3.extent(objects, function(d) { console.log(d.date); return d.date; }));
+y.domain([1, 5]);
+
+var svg = d3.select("#chart").append("svg")
+  .attr("width", width + margin.left+margin.right)
+  .attr("height", height+margin.bottom+margin.top)
+  .append("g")
+          .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("g")
+  .attr("class", "x-axis")
+  .call(xAxis)
+          .attr("transform", "translate(0," + height + ")")
+
+
+svg.append("g")
+  .attr("class", "y-axis")
+  .call(yAxis)
+  .append("text")
+    .text("Mood")
+    .attr("transform", "rotate(270)")
+    .attr("dy", ".71em")
+    .attr("y", 8)
+        .style("text-anchor", "end")
+
+svg.append("path")
+  .attr("class", "line")
+  .attr("d", line(objects));
+
+svg.selectAll("circle")
+  .data(objects)
+  .enter().append("circle")
+  .attr("class", "circle")
+  .attr("r", 3.5)
+  .attr("cx", function(d) {return x(d.date); })
+  .attr("cy", function(d) {return y(d.mood); });
+
+</script>
+
+</div>
+{% endif %}
+
+
+
+{% endblock %}
+

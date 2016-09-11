@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="container">
+<br>
+	<h1>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h1>
+	<br>
+	<p>Your average mood on your current prescriptions:</p>
+	<br>
+
+<!-- 	{{d}} -->
+<div class="row">
+<div class="col-md-4" style ="border-left: 1px solid" >
+<p>People <b>similar to you</b> have taken:</p>
+</div>
+<div class="col-md-4" style ="border-left: 1px solid">
+<p>Other {% if current_user.gender=="Female" %} <b>women</b> {%else%} <b>men</b> {% endif %} are taking:</p>
+{% if current_user.gender=="Female" %}
+{% for s in female_scripts %}
+<li>{{s}} - {% for i in female_scripts[s] %} {{i}} mg {%endfor%}</li>
+
+{% endfor %}
+{%else%}
+{% for s in male_scripts %}
+<li>{{s}} - {% for i in male_scripts[s] %} {{i}} mg {%endfor%}</li>
+{% endfor %}
+{% endif %}
+</div>
+<div class="col-md-4" style ="border-left: 1px solid">
+<p>Other people in <b>your age group</b> have taken:</p>
+{% for s in d %}
+<li>{{s}} - {% for i in d[s] %} {{i}} mg {%endfor%}</li>
+{% endfor %}
+</div>
+<!-- {{d}} -->
+</div>
+</div>
+{% endblock %}
+
+<script>
+drugs_dict = [{'name': 'Abilify', 'type': 'Atypical Antipsychotic'}, {'name': 'Ativan', 'type': 'Benzodiazapine'}, {'name': 'Clozaril', 'type':'Atypical Antipsychotic'}, 
+{'name': 'Cymbalta', 'type': 'SNRI'}, {'name': 'Depakote', 'type': 'Mood Stabilizer'}, {'name': 'Effexor', 'type': 'SNRI'}, {'name': 'Gabapentin', 'type': 'Mood Stabilizer'},
+{'name': 'Geodon', 'type': 'Atypical Antipsychotic'}, {'name': 'Invega', 'type': 'Atypical Antipsychotic'},{'name': 'Klonopin', 'type':'Benzodiazapine'}, 
+{'name': 'Lamictal', 'type': 'Mood Stabilizer'}, {'name': 'Lexapro', 'type': 'SSRI'}, {'name': 'Librium', 'type': 'Benzodiazapine'}, 
+{'name':'Lyrica', 'type': 'Mood Stabilizer'}, {'name': 'Nardil', 'type': 'MAOI'}, {'name': 'Parnate', 'type': 'MAOI'}, {'name': 'Paxil', 'type': 'SSRI'},
+ {'name': 'Prozac', 'type': 'SSRI'},{'name': 'Remeron', 'type': 'NASSA'}, {'name': 'Restoril', 'type': 'Benzodiazapine'}, {'Risperdal': 'Atypical Antipsychotic'},{'name': 'Seroquel', 'type': 'Atypical Antipsychotic'}, {'Tegretol': 'Mood Stabilizer'}, {'Topamax': 'Mood Stabilizer'}, {'Trileptal': 'Mood Stabilizer'}, {'name': 'Trintellix', 'type': 'Atypical Antidepressant'}, {'name': 'Valium', 'type': 'Benzodiazapine'}, {'name': 'Wellbutrin', 'type': 'NDRI'}, {'name': 'Xanax', 'type': 'Benzodiazapine'}, {'Zoloft': 'SSRI'},{'name': 'Zyprexa', 'type': 'Atypical Antipsychotic'}]
+</script>

@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}MedTracker{% endblock %}
+
+{% block page_content %}
+<style>
+  .axis path,
+  .axis line{
+    fill: none;
+    stroke: grey;
+  }
+
+  .tick text{
+    font-size: 20px;
+  }
+
+  .tick line{
+    opacity: .1;
+  }
+
+   .circle{
+    opacity: 0.8;
+    fill: purple;
+  }
+
+  .circle text {
+  display: none;
+  font: 10px sans-serif;
+}
+
+.domain {
+	fill: none;
+	stroke:black;
+}
+
+.line {
+	fill: none;
+	stroke:black;
+	width: 10;
+}
+
+.axis {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1.0;
+    shape-rendering: crispEdges;
+}
+
+.circle:hover text {
+  display: inline;
+}
+
+</style>
+{% if current_user.is_authenticated %}
+<script>  var objects = new Array();</script>
+  <div class="add"> <a href="{{ url_for('.mood') }}" class="btn btn-lg btn-primary">Add a mood</a></div>
+  <br>
+<h1 style="font-size: 35">My Moods</h1>
+{% for mood in moods %}
+<script>
+var d = {};
+d.mood = ({{mood.mood}})
+d.date = ('{{mood.date}}')
+
+objects.push(d)
+</script>
+{% endfor %}
+<div class="container">
+
+<div class="test"></div>
+<script>
+
+var parseDate = d3.time.format("%Y-%m-%d").parse;
+
+var data = [{"date": 1, "mood": 1}, {"date": 2, "mood": 2}, {"date": 3, "mood": 4}, {"date": 4, "mood": 2}]
+for (i=0; i<objects.length; i++) {
+	//console.log(objects[i].date)
+	objects[i].date = parseDate(objects[i].date);
+}
+objects = objects.sort(function(a, b) {
+  return a.date-b.date;
+})
+//console.log(objects)
+// Define the resolution
+var margin = {top: 20, right: 20, bottom:40, left: 22},
+width = 1100 - margin.left - margin.right;
+height = 400 - margin.top-margin.bottom;    
+
+// Create the SVG 'canvas'
+var svg = d3.select("body")
+    .append("svg")
+
+var x = d3.time.scale()
+	.range([0, width]);
+
+var y = d3.scale.linear()
+	.range([height, 0]);
+
+var xAxis = d3.svg.axis()
+	.scale(x)
+	.orient("bottom");
+
+ var yAxis = d3.svg.axis()
+ 	.scale(y)
+ 	.innerTickSize(-width)
+ 	.orient("left").ticks(5);
+
+ var circle = svg.selectAll("circle")
+ 	.data(objects)
+ 	.enter()
+ 	.append("circle")
+
+var line = d3.svg.line()
+	.x(function(d) { return x(d.date); })
+	.y(function(d) { return y(d.mood); })
+
+x.domain(d3.extent(objects, function(d) { return d.date; }));
+y.domain([1, 5]);
+
+// function for the y grid lines
+function make_y_axis() {
+  return d3.svg.axis()
+      .scale(y)
+      .orient("left")
+      .ticks(5)
+}
+
+// Draw the y Grid lines
+svg.append("g")            
+    .attr("class", "grid")
+    .call(make_y_axis()
+        .tickSize(-width, 0, 0)
+        .tickFormat("")
+    )
+
+var svg = d3.select(".test").append("svg")
+	.attr("width", width + margin.left+margin.right)
+	.attr("height", height+margin.bottom+margin.top)
+	.append("g")
+	        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("g")
+	.attr("class", "x-axis")
+	.call(xAxis)
+	        .attr("transform", "translate(0," + height + ")")
+
+svg.append("g")
+	.attr("class", "y-axis")
+	.call(yAxis)
+	.append("text")
+		.text("Mood")
+		.attr("transform", "rotate(270)")
+		.attr("dy", "1.0em")
+		.attr("y", 8)
+        .style("text-anchor", "end")
+
+/*svg.append("path")
+	.datum(data)
+	.attr("class", "line")
+	.attr("d", line);*/
+
+svg.append("path")
+	.attr("class", "line")
+	.attr("d", line(objects));
+
+svg.selectAll("circle")
+	.data(objects)
+	.enter().append("circle")
+	.attr("class", "circle")
+	.attr("r", 5.5)
+	.attr("cx", function(d) {return x(d.date); })
+	.attr("cy", function(d) {return y(d.mood); })
+
+
+</script>
+
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}MedTracker{% endblock %}
+
+{% block page_content %}
+<style>
+body {
+	background: #F0F8FF;
+}
+
+h3{
+	padding: 30px;
+ font-size: 40px;
+font-family: 'Droid Sans', sans-serif;
+    font-weight: bold;
+}
+h4{
+	padding: 20px;
+ font-size: 20px;
+font-family: 'Droid Sans', sans-serif;
+    font-weight: bold;
+}
+.main{
+	text-align: center;
+}
+first-letter {
+    font-size: 130px;
+}
+p {
+	font-family: 'Droid Sans', sans-serif;
+	 font-size: 23px;
+	 color: grey;
+}
+.p1 {
+	font-family: 'Droid Sans', sans-serif;
+	 font-size: 15px;
+	 color: grey;
+}
+</style>
+
+<div class="container">
+<div class="main">
+<h3>Welcome to MedTracker!</h3>
+<p>There are many different types of psychiatric medications.  Though  progress is being made - particularly in the field of <a href='https://genesight.com/patients/genesight/psychotropic/'>psychotropic gene testing</a> - there is still a great deal of guesswork in the prescribing of psychiatric medicines.  How do you know if you're getting better? How do you know if your medicine is working? How do you know <i>which</i> medicine is working?</p>
+<p>It is not currently possible to determine which patients will suffer which side effects from a given medication, or which patients will respond positively to a given medication.  Until science reaches that point, we at MedTracker aim to make the process as calculated as possible by gathering insights from patients and producing both personal and cluster-based recommendations.</p>
+</div>
+<hr>
+<h4>How does it work?</h4>
+<div class="container">
+<p><div class="p1">MedTracker allows you to keep track of your prescription updates and mood so you can have a thorough and accurate account of how you're feeling for your doctor.  MedTracker also lets you note which side effects you are experiencing to help you avoid taking similar medicines in the future. We take into account a drug's active ingredients, listed side-effects, your personal history, and similar uers' experience to provide you with as much information possible in once place.</div></p></div>
+<h4>Who will see my information?</h4>
+<div class="container">
+<p><div class="p1">Your trends will also be <b>anonymously</b> aggregated in our clustering algorithm. We also encourage users to share their information with their doctors; in fact, you can automatically share your account with your physician. This, however, is entirely up to you!</div></p></div>
+<h4>Does it cost money to register?</h4>
+<div class="container">
+<p><div class="p1">No. MedTracker is free of charge.</div></p>
+<div>
+{% endblock %}

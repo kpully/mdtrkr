@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}MedTracker{% endblock %}
+
+{% block page_content %}
+{% if current_user.is_authenticated %}
+<script>
+  var objects = new Array();
+  $(document).ready(function() {
+    $("#delete").click(function() {
+      console.log('need to delete this!');
+    })
+  });
+</script>
+<div class="row">
+  <div class="add"> <a href="{{ url_for('.script') }}" class="btn btn-lg btn-primary">Add a prescription</a></div>
+
+</div>
+<br>
+ 
+  <div class="row">
+    <div class="col-md-12" style="font-size:20px">
+      <h3 style="font-size:35px"> My current prescriptions:</h3>
+      <ul class="list-group">
+        {% for script in scripts %}
+        {% if not script.end_date %}
+        <class="list-group-item"><b>{{ script.drug}}:</b> {{ script.dose}} mg, since {{ script.start }} <a href="{{ url_for('.del_record', id=script.id) }}"> <i class="material-icons pull-xs-right" id="delete">clear</i></a> 
+        <a href="{{ url_for('.edit_record', id=script.id) }}" ><i class="material-icons pull-xs-right">edit</i></a></class="list-group-item">
+        <script>
+          var d = {};
+          d.medicine = ('{{script.drug}}')
+          d.dose = ({{script.dose}})
+          objects.push(d)
+        </script>
+        {% endif %}
+        {% endfor %}
+        <script>
+          console.log(objects)
+        </script>
+      </ul>
+      <br><br><br><br>
+      <h3 style="font-size:35px"> My past prescriptions:</h3>
+      <ul class="list-group">
+        {% for script in scripts %}
+        {% if script.end_date %}
+        <class="list-group-item"><b>{{ script.drug}}:</b> {{ script.dose}} mg <a href="{{ url_for('.del_record', id=script.id) }}"> <i class="material-icons pull-xs-right">clear</i></a> 
+        <a href="{{ url_for('.edit_record', id=script.id) }}" ><i class="material-icons pull-xs-right">edit</i></a></class="list-group-item">
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endblock %}

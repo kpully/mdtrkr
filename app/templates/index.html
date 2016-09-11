@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}MedTracker{% endblock %}
+{% block page_content %}
+<link href="https://fonts.googleapis.com/css?family=Anton|Droid+Sans" rel="stylesheet"><style>
+body {
+	background: #F0F8FF;
+}
+h1 {
+	padding: 20px;
+ font-size: 100px;
+font-family: 'Droid Sans', sans-serif;
+}
+first-letter {
+    font-size: 130px;
+}
+p {
+	font-family: 'Droid Sans', sans-serif;
+	 font-size: 40px;
+	 color: grey;
+}
+</style>
+<body>
+<div class="container" id='head'>
+<h1> <first-letter>M</first-letter>ed<first-letter>T</first-letter>racker <img src = 'static/img/pill.png' height="80" width="80"></h1>
+ <p><small>Take the guesswork out of your prescriptions and take control of your healthcare.</small></p>
+ <br>
+  <p><a class="btn btn-primary btn-lg" href="{{ url_for('.about') }}"  role="button">Learn more</a></p>
+</div>
+<script>
+var img = document.getElementById('head').getElementsByTagName('img');
+TweenLite.to(img, 2, {rotation:"6.28rad"});
+</script>
+</body>
+{% endblock %}
