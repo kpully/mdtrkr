@@ -22,6 +22,7 @@ def about():
 @main.route('/analysis')
 def analysis():
 	avg=0
+	user_scripts, men, women = [], [], []
 	user=current_user._get_current_object()
 	men = User.query.filter(User.gender=="Male", User.id!=user.id).all()
 	women = User.query.filter(User.gender=="Female", User.id!=user.id).all()
