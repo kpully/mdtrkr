@@ -33,7 +33,7 @@ def analysis():
 		else:
 			curr_scripts.append(s.start)
 	max_ = max(curr_scripts)
-	moods = Mood.query.filter(Mood.date>=max_, Mood.user_id=user.id).all()
+	moods = Mood.query.filter(Mood.date>=max_, Mood.user_id==user.id).all()
 	sum_=0
 	divisor = 0
 	for mood in moods:
