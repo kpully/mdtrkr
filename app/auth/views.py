@@ -50,6 +50,7 @@ def register():
                     age_group = age_group,
                     password=form.password.data)
         db.session.add(user)
+        db.session.commit()
         flash('You can now login.')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
