@@ -25,7 +25,3 @@ class MoodForm(Form):
     side_effects = TextAreaField('Are you feeling any side effects today?')
     notes = TextAreaField('Notes')
     submit = SubmitField('Submit')
-
-    def validate_date(self, field):
-        if Mood.query.filter_by(date=field.data).first():
-            raise ValidationError('Date already accounted for.')
