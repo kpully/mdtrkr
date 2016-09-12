@@ -53,7 +53,7 @@ def analysis():
 			male_scripts[Script.query.filter_by(user_id=man.id).first().drug].add(Script.query.filter_by(user_id=man.id).first().dose)
 		except:
 			pass
-	age_group = User.query.filter(User.age_group=user.age_group, User.id !=user.id).all()
+	age_group = User.query.filter(User.age_group==user.age_group, User.id !=user.id).all()
 	d = defaultdict(set)
 	for person in age_group:
 		try:
