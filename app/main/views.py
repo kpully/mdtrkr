@@ -21,6 +21,7 @@ def about():
 
 @main.route('/analysis')
 def analysis():
+	avg=0
 	user=current_user._get_current_object()
 	men = User.query.filter(User.gender=="Male", User.id!=user.id).all()
 	women = User.query.filter(User.gender=="Female", User.id!=user.id).all()
@@ -32,7 +33,7 @@ def analysis():
 		else:
 			curr_scripts.append(s.start)
 	max_ = max(curr_scripts)
-	moods = Mood.query.filter(Mood.date>=max_).all()
+	moods = Mood.query.filter(Mood.date>=max_, Mood.user_id=user.id).all()
 	sum_=0
 	divisor = 0
 	for mood in moods:
@@ -52,7 +53,7 @@ def analysis():
 			male_scripts[Script.query.filter_by(user_id=man.id).first().drug].add(Script.query.filter_by(user_id=man.id).first().dose)
 		except:
 			pass
-	age_group = User.query.filter_by(age_group=user.age_group).all()
+	age_group = User.query.filter(User.age_group=user.age_group, User.id !=user.id).all()
 	d = defaultdict(set)
 	for person in age_group:
 		try:
