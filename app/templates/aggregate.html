@@ -5,33 +5,38 @@
 <br>
 	<h1>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h1>
 	<br>
-	<p>Your average mood on your current prescriptions:</p>
+		<p style="font-size:25px">Your <b>average mood</b> on your current prescriptions: 
+	{% if avg > 3%} <span style="color: green">{{avg}}</span>
+	{% elif avg < 3 %} <span style="color: red">{{avg}}</span>
+	{%else%}{{avg}}
+	{%endif %} </p>
+	<script>console.log({{avg}})</script>
 	<br>
 
 <!-- 	{{d}} -->
 <div class="row">
-<div class="col-md-4" style ="border-left: 1px solid" >
-<p>People <b>similar to you</b> have taken:</p>
-</div>
-<div class="col-md-4" style ="border-left: 1px solid">
-<p>Other {% if current_user.gender=="Female" %} <b>women</b> {%else%} <b>men</b> {% endif %} are taking:</p>
-{% if current_user.gender=="Female" %}
-{% for s in female_scripts %}
-<li>{{s}} - {% for i in female_scripts[s] %} {{i}} mg {%endfor%}</li>
+		<div class="col-md-4" style ="border-left: 1px solid" >
+			<p>People <b>similar to you</b> have taken:</p>
+		</div>
+		<div class="col-md-4" style ="border-left: 1px solid">
+			<p>Other {% if current_user.gender=="Female" %} <b>women</b> {%else%} <b>men</b> {% endif %} are taking:</p>
+			{% if current_user.gender=="Female" %}
+			{% for s in female_scripts %}
+			<li>{{s}} - {% for i in female_scripts[s] %} {{i}} mg {%endfor%}</li>
 
-{% endfor %}
-{%else%}
-{% for s in male_scripts %}
-<li>{{s}} - {% for i in male_scripts[s] %} {{i}} mg {%endfor%}</li>
-{% endfor %}
-{% endif %}
-</div>
-<div class="col-md-4" style ="border-left: 1px solid">
-<p>Other people in <b>your age group</b> have taken:</p>
-{% for s in d %}
-<li>{{s}} - {% for i in d[s] %} {{i}} mg {%endfor%}</li>
-{% endfor %}
-</div>
+			{% endfor %}
+			{%else%}
+			{% for s in male_scripts %}
+			<li>{{s}} - {% for i in male_scripts[s] %} {{i}} mg {%endfor%}</li>
+			{% endfor %}
+			{% endif %}
+		</div>
+		<div class="col-md-4" style ="border-left: 1px solid">
+			<p>Other people in <b>your age group</b> have taken:</p>
+			{% for s in d %}
+			<li>{{s}} - {% for i in d[s] %} {{i}} mg {%endfor%}</li>
+			{% endfor %}
+		</div>
 <!-- {{d}} -->
 </div>
 </div>

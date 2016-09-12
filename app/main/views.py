@@ -21,8 +21,24 @@ def about():
 
 @main.route('/analysis')
 def analysis():
-	men = User.query.filter_by(gender="Male").all()
-	women = User.query.filter_by(gender="Female").all()
+	user=current_user._get_current_object()
+	men = User.query.filter(User.gender=="Male", User.id!=user.id).all()
+	women = User.query.filter(User.gender=="Female", User.id!=user.id).all()
+	user_scripts = Script.query.filter_by(user=current_user._get_current_object())
+	curr_scripts = []
+	for s in user_scripts:
+		if s.end_date:
+			pass
+		else:
+			curr_scripts.append(s.start)
+	max_ = max(curr_scripts)
+	moods = Mood.query.filter(Mood.date>=max_).all()
+	sum_=0
+	divisor = 0
+	for mood in moods:
+		sum_ += mood.mood
+		divisor += 1
+	avg=float(sum_/divisor)
 	female_scripts = defaultdict(set)
 	male_scripts = defaultdict(set)
 	user=current_user._get_current_object()
@@ -43,7 +59,7 @@ def analysis():
 			d[Script.query.filter_by(user_id=person.id).first().drug].add(Script.query.filter_by(user_id=person.id).first().dose)
 		except:
 			pass
-	return render_template('aggregate.html', women=women, men = men, male_scripts=male_scripts, female_scripts=female_scripts,  d=d)
+	return render_template('aggregate.html', male_scripts=male_scripts, female_scripts=female_scripts,  d=d, user_scripts=user_scripts, curr_scripts=curr_scripts, avg=avg)
 
 @main.route('/moods')
 def moods():
