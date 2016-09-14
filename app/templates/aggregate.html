@@ -24,7 +24,7 @@
 			<li>SSRIs</li>
 		</div>
 		<div class="col-md-4" style ="border-left: 1px solid">
-			<p>Other {% if current_user.gender=="Female" %} <b style="font-size:30px">women</b> {%else%} <b>men</b> {% endif %} are taking:</p>
+			<p>Other {% if current_user.gender=="Female" %} <b style="font-size:28px">women</b> {%else%} <b style="font-size:28px">men</b> {% endif %} are taking:</p>
 			{% if current_user.gender=="Female" %}
 			{% for s in female_scripts %}
 			<li>{{s}} - {% for i in female_scripts[s] %} {{i}} mg {%endfor%}</li>
@@ -37,7 +37,7 @@
 			{% endif %}
 		</div>
 		<div class="col-md-4" style ="border-left: 1px solid">
-			<p>Other people in <b>your age group</b> have taken:</p>
+			<p>Other people in your <b style="font-size:28px">age group</b> have taken:</p>
 			{% for s in d %}
 			<li>{{s}} - {% for i in d[s] %} {{i}} mg {%endfor%}</li>
 			{% endfor %}
