@@ -7,8 +7,8 @@ from datetime import datetime
 from flask_login import login_required, current_user
 from collections import defaultdict
 
-import pandas as pd
-import numpy as np
+#import pandas as pd
+#import numpy as np
 
 @main.route('/')
 def index():
