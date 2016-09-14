@@ -7,6 +7,9 @@ from datetime import datetime
 from flask_login import login_required, current_user
 from collections import defaultdict
 
+import pandas as pd
+import numpy as np
+
 @main.route('/')
 def index():
     return render_template('index.html')
@@ -21,6 +24,10 @@ def about():
 
 @main.route('/analysis')
 def analysis():
+	df = db.engine.execute("SELECT mood, moods.user_id, moods.date, scripts.drug, dose, scripts.start, scripts.end_date FROM  moods JOIN scripts on moods.user_id=scripts.user_id WHERE (moods.date>=scripts.start AND scripts.end_date IS NULL) OR (moods.date >=start AND moods.date<=end_date) ORDER BY date")
+	for row in df:
+		print row
+	#df.groupby(['user_id', 'drug']).mean()
 	avg=0
 	user_scripts, men, women = [], [], []
 	user=current_user._get_current_object()
@@ -61,7 +68,7 @@ def analysis():
 			d[Script.query.filter_by(user_id=person.id).first().drug].add(Script.query.filter_by(user_id=person.id).first().dose)
 		except:
 			pass
-	return render_template('aggregate.html', male_scripts=male_scripts, female_scripts=female_scripts,  d=d, user_scripts=user_scripts, curr_scripts=curr_scripts, avg=avg)
+	return render_template('aggregate.html', male_scripts=male_scripts, df=df, female_scripts=female_scripts,  d=d, user_scripts=user_scripts, curr_scripts=curr_scripts, avg=avg)
 
 @main.route('/moods')
 def moods():
@@ -143,12 +150,8 @@ def mood():
 	form = MoodForm()
 	if form.validate_on_submit():
 			mood=Mood(mood=form.mood.data, date=form.date.data, side_effects=form.side_effects.data, notes=form.notes.data, user= current_user._get_current_object())
-			try:
-				db.session.add(mood)
-				db.session.commit()
-			except:
-   				session.rollback()
-   				db.session.add(mood)
+			db.session.add(mood)
+			db.session.commit()
 			flash('Your mood was recorded successfully.')
 			return redirect(url_for('main.moods'))
 	return render_template('add_script.html', form=form)

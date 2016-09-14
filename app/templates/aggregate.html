@@ -10,13 +10,18 @@
 	{% elif avg < 3 %} <span style="color: red">{{avg}}</span>
 	{%else%}{{avg}}
 	{%endif %} </p>
-	<script>console.log({{avg}})</script>
+	<script>
+	console.log({{avg}});
+	console.log({{df}})
+	</script>
 	<br>
 
 <!-- 	{{d}} -->
 <div class="row">
 		<div class="col-md-4" style ="border-left: 1px solid" >
 			<p>People <b>similar to you</b> have taken:</p>
+			<li>Atypical Antidepressants</li>
+			<li>SSRIs</li>
 		</div>
 		<div class="col-md-4" style ="border-left: 1px solid">
 			<p>Other {% if current_user.gender=="Female" %} <b>women</b> {%else%} <b>men</b> {% endif %} are taking:</p>
